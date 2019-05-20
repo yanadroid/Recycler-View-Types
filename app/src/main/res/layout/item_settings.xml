@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp">
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_margin="15dp"
+            android:layout_toStartOf="@+id/bt_settings"/>
+
+        <Button
+            android:id="@+id/bt_settings"
+            style="@style/ButtonStyle"
+            android:text="@string/title_settings"
+            android:layout_alignParentEnd="true"/>
+
+        <include layout="@layout/view_line"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@+id/bt_settings"/>
+
+    </RelativeLayout>
+</layout>
