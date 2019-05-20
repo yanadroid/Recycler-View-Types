@@ -27,11 +27,11 @@ import existek.existek.recylerviewtypes.databinding.ItemSettingsBinding;
 import existek.existek.recylerviewtypes.databinding.ItemUserBinding;
 import existek.existek.recylerviewtypes.utils.UploadImageHelper;
 import existek.existek.recylerviewtypes.views.base.BaseViewHolder;
-import existek.existek.recylerviewtypes.views.callback.OnEmailChanged;
-import existek.existek.recylerviewtypes.views.callback.OnExpandableChanged;
-import existek.existek.recylerviewtypes.views.callback.OnImageChanged;
+import existek.existek.recylerviewtypes.views.callback.OnEmailChangedCallback;
+import existek.existek.recylerviewtypes.views.callback.OnExpandableChangedCallback;
+import existek.existek.recylerviewtypes.views.callback.OnImageChangedCallback;
 import existek.existek.recylerviewtypes.views.callback.OnItemClickListener;
-import existek.existek.recylerviewtypes.views.callback.OnNotifyProgressChanged;
+import existek.existek.recylerviewtypes.views.callback.OnNotifyProgressCallback;
 import existek.existek.recylerviewtypes.views.callback.OnUploadImageCallback;
 import existek.existek.recylerviewtypes.views.custom.CustomButtonLayout;
 import existek.existek.recylerviewtypes.views.custom.CustomEditText;
@@ -91,7 +91,7 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
          switch (getItemViewType(position)) {
              case Type.TYPE_PROGRESS:
-                 holder.setCallback((OnNotifyProgressChanged)(progress, pos, stop, start) -> {
+                 holder.setCallback((OnNotifyProgressCallback)(progress, pos, stop, start) -> {
                      Progress it = (Progress) getItem(pos);
                      it.setProgress(progress);
                      it.setStoped(stop);
@@ -99,7 +99,7 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                  });
                  break;
              case Type.TYPE_RANDOM:
-                 holder.setCallback((OnExpandableChanged) (id, pos, current, expandable) -> {
+                 holder.setCallback((OnExpandableChangedCallback) (id, pos, current, expandable) -> {
                      Random it = (Random) getItem(pos);
                      it.setExpandable(expandable);
                      it.setId(id);
@@ -107,7 +107,7 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                  });
                  break;
              case Type.TYPE_EMAIL:
-                 holder.setCallback((OnEmailChanged) (pos, text, error, typing, normal) -> {
+                 holder.setCallback((OnEmailChangedCallback) (pos, text, error, typing, normal) -> {
                      Email it = (Email) getItem(pos);
                      it.setEmail(text);
                      it.setError(error);
@@ -117,7 +117,7 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                  break;
              case Type.TYPE_USER:
                  ((UserViewHolder) holder).setListener(pos -> listener.onClick(pos));
-                 holder.setCallback((OnImageChanged) (bitmap, pos) -> {
+                 holder.setCallback((OnImageChangedCallback) (bitmap, pos) -> {
                      User it = (User) getItem(pos);
                      it.setDrawable(bitmap);
                  });
@@ -166,20 +166,20 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void onEnterEvent(String value) {
             binding.tvError.setVisibility(View.GONE);
-            ((OnEmailChanged)callback).notify(getAdapterPosition(), binding.etEmail.getEmail(), false, false, true);
+            ((OnEmailChangedCallback)callback).notify(getAdapterPosition(), binding.etEmail.getEmail(), false, false, true);
         }
 
         @Override
         public void onEventError() {
             binding.tvError.setVisibility(View.VISIBLE);
-            ((OnEmailChanged)callback).notify(getAdapterPosition(), binding.etEmail.getEmail(), true, false, false);
+            ((OnEmailChangedCallback)callback).notify(getAdapterPosition(), binding.etEmail.getEmail(), true, false, false);
         }
 
         @Override
         public void onEventTyping() {
             binding.tvError.setVisibility(View.GONE);
             if (callback != null) {
-                ((OnEmailChanged) callback).notify(getAdapterPosition(), binding.etEmail.getEmail(), false, true, false);
+                ((OnEmailChangedCallback) callback).notify(getAdapterPosition(), binding.etEmail.getEmail(), false, true, false);
             }
         }
     }
@@ -239,7 +239,7 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             animation.setDuration(TIME_DURATION);
             animation.setInterpolator(new DecelerateInterpolator());
             animation.setListener(value -> {
-                ((OnNotifyProgressChanged)callback).notify(binding.progressBar.getProgress(), getAdapterPosition(), false, true);
+                ((OnNotifyProgressCallback)callback).notify(binding.progressBar.getProgress(), getAdapterPosition(), false, true);
                 if (value == TIME_DURATION) {
                     clearProgressAnimation();
                 }
@@ -249,14 +249,14 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         private void stopProgressAnimation() {
             binding.progressBar.clearAnimation();
-            ((OnNotifyProgressChanged)callback).notify(binding.progressBar.getProgress(), getAdapterPosition(), true, false);
+            ((OnNotifyProgressCallback)callback).notify(binding.progressBar.getProgress(), getAdapterPosition(), true, false);
         }
 
         private void clearProgressAnimation() {
             binding.progressBar.setProgress(0);
 
             if (callback != null) {
-                ((OnNotifyProgressChanged)callback).notify(0, getAdapterPosition(), false, false);
+                ((OnNotifyProgressCallback)callback).notify(0, getAdapterPosition(), false, false);
             }
 
             if (animation != null) {
@@ -294,20 +294,20 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onPosition(int id, int position) {
-            ((OnExpandableChanged)callback).notify(id, getAdapterPosition(), position, true);
+            ((OnExpandableChangedCallback)callback).notify(id, getAdapterPosition(), position, true);
             binding.tvDescription.setText(random.getDescriptions().get(position).getText());
         }
 
         @Override
         public void expandableOpen() {
             binding.tvDescription.setVisibility(View.VISIBLE);
-            ((OnExpandableChanged)callback).notify(binding.llContainer.getCurrentId(),  getAdapterPosition(), 0, true);
+            ((OnExpandableChangedCallback)callback).notify(binding.llContainer.getCurrentId(),  getAdapterPosition(), 0, true);
         }
 
         @Override
         public void expandableClose() {
             binding.tvDescription.setVisibility(View.GONE);
-            ((OnExpandableChanged)callback).notify(binding.llContainer.getCurrentId(), getAdapterPosition(), 0, false);
+            ((OnExpandableChangedCallback)callback).notify(binding.llContainer.getCurrentId(), getAdapterPosition(), 0, false);
         }
     }
 
@@ -356,7 +356,7 @@ public class MainAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void setImage(Bitmap bitmap) {
             binding.ivPhoto.setImageBitmap(bitmap);
-            ((OnImageChanged) callback).notify(bitmap, getAdapterPosition());
+            ((OnImageChangedCallback) callback).notify(bitmap, getAdapterPosition());
         }
 
         public void setListener(OnItemClickListener listener) {

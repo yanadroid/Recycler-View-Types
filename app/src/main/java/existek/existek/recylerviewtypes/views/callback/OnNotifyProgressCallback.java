@@ -1,5 +1,5 @@
 package existek.existek.recylerviewtypes.views.callback;
 
-public interface OnNotifyProgressChanged extends BaseCallback {
+public interface OnNotifyProgressCallback extends BaseCallback {
     void notify(int progress, int position, boolean stop, boolean start);
 }
